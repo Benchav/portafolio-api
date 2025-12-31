@@ -11,7 +11,7 @@ const groq = new groq_sdk_1.default({ apiKey: env_1.config.groqApiKey });
 const generateResponse = async (userMessage) => {
     try {
         const context = (0, portfolioContext_1.getPortfolioContext)();
-        // PROMPT DE INGENIERÍA: Define la personalidad y las reglas estrictas
+        // PROMPT DE INGENIERÍA: Define la personalidad, detección de idioma y reglas estrictas
         const systemPrompt = `
       ROLE:
       You are the AI Assistant for the Portfolio of Joshua Benjamín Chávez Lau, a Full Stack Developer.
@@ -45,15 +45,16 @@ const generateResponse = async (userMessage) => {
                     content: userMessage
                 }
             ],
-            model: "llama3-70b-8192", // Modelo potente para entender instrucciones complejas
-            temperature: 0.5, // Creatividad media para sonar natural pero preciso
+            // CORRECCIÓN CRÍTICA: Actualizado al modelo Llama 3.3 Versatile
+            model: "llama-3.3-70b-versatile",
+            temperature: 0.5,
             max_tokens: 400,
         });
         return completion.choices[0]?.message?.content || "No response generated.";
     }
     catch (error) {
         console.error("Error Groq:", error);
-        return "Error temporal en el servicio de IA. Intenta de nuevo.";
+        return "Lo siento, hubo un error temporal conectando con la inteligencia artificial (Modelo ocupado o en mantenimiento). Por favor intenta de nuevo.";
     }
 };
 exports.generateResponse = generateResponse;
