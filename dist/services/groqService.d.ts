@@ -1,7 +1,2 @@
-export declare class GroqService {
-    private groq;
-    constructor();
-    generateResponse(message: string): Promise<string>;
-}
-export declare const groqService: GroqService;
+export declare const generateResponse: (userMessage: string) => Promise<string>;
 //# sourceMappingURL=groqService.d.ts.map

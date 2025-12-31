@@ -11,7 +11,7 @@ const chatController = async (req, res) => {
         // Validar body
         const { message } = chatSchema.parse(req.body);
         // Generar respuesta
-        const response = await groqService_1.groqService.generateResponse(message);
+        const response = await (0, groqService_1.generateResponse)(message);
         res.status(200).json({
             success: true,
             message: response,

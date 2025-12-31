@@ -1,44 +1,39 @@
-import { content, sharedData } from './content';
+import { sharedData, content } from './content';
 
-export const getPortfolioContext = (): string => {
-    const skillsStr = Object.entries(content.skills)
-        .map(([category, items]) => `- ${category}: ${items.join(', ')}`)
-        .join('\n');
-
-    const experienceStr = content.experience
-        .map(exp => `- ${exp.role} en ${exp.company} (${exp.period}): ${exp.description}`)
-        .join('\n');
-
-    const projectsStr = content.projects
-        .map(proj => `- ${proj.name}: ${proj.description} (Tech: ${proj.techStack.join(', ')})`)
-        .join('\n');
+export const getPortfolioContext = () => {
+    // Extraemos la data base (en español) que la IA usará como fuente de verdad.
+    // Llama 3 es capaz de traducir esto al vuelo si se le pide en el System Prompt.
+    const spanish = content.es;
 
     return `
-    Estás actuando como el asistente virtual del portafolio profesional de ${sharedData.name}.
-    Tu objetivo es responder preguntas sobre su experiencia, habilidades y proyectos de manera profesional, amable y concisa.
-
-    INFORMACIÓN DEL PERFIL:
-    
+    === DATOS DEL PERFIL (JOSHUA CHÁVEZ) ===
     Nombre: ${sharedData.name}
     Email: ${sharedData.email}
-    Rol: ${sharedData.role}
-    Ubicación: ${sharedData.location}
-
-    SOBRE MÍ:
-    ${content.about}
-
-    HABILIDADES TÉCNICAS:
-    ${skillsStr}
-
-    EXPERIENCIA LABORAL:
-    ${experienceStr}
-
-    PROYECTOS DESTACADOS:
-    ${projectsStr}
-
-    INSTRUCCIONES ADICIONALES:
-    - Responde siempre en primera persona del plural ("nosotros") o tercera persona referida a Joshua, o simplemente como un asistente servicial.
-    - Si te preguntan algo fuera de este contexto, indica amablemente que solo puedes responder sobre la trayectoria profesional de Joshua.
-    - Sé preciso con las tecnologías mencionadas.
+    GitHub: ${sharedData.github}
+    LinkedIn: ${sharedData.linkedin}
+    Experiencia Total: ${sharedData.stats.yearsExperience} años.
+    Proyectos Entregados: ${sharedData.stats.projectsShipped}.
+    
+    === RESUMEN BIO ===
+    ${spanish.about.bio}
+    
+    === EXPERIENCIA LABORAL ===
+    ${spanish.experience.list.map(job =>
+        `- ROL: ${job.role} en ${job.company} (${job.period}).
+       DESC: ${job.description}
+       TECH: ${job.technologies.join(', ')}`
+    ).join('\n')}
+    
+    === PROYECTOS REALIZADOS (PORTAFOLIO) ===
+    ${sharedData.projects.map(p =>
+        `- PROYECTO: ${p.title} (${p.category})
+       TAGS: ${p.tags.join(', ')}
+       LINK: ${p.link}`
+    ).join('\n')}
+    
+    === STACK TECNOLÓGICO ===
+    ${spanish.tech.categories.map(cat =>
+        `- ${cat.title}: ${Array.isArray(cat.skills) ? cat.skills.map((s: any) => typeof s === 'string' ? s : s.name).join(', ') : ''}`
+    ).join('\n')}
   `;
 };
