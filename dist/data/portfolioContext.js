@@ -3,33 +3,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPortfolioContext = void 0;
 const content_1 = require("./content");
 const getPortfolioContext = () => {
-    // Extraemos la data base (en español) que la IA usará como fuente de verdad.
-    // Llama 3 es capaz de traducir esto al vuelo si se le pide en el System Prompt.
     const spanish = content_1.content.es;
+    // Mapeamos los proyectos uniendo la info técnica con la descripción
+    const projectContext = content_1.sharedData.projects.map(p => {
+        // @ts-ignore
+        const description = spanish.projectDescriptions[p.id] || "Proyecto destacado de desarrollo de software.";
+        return `- PROYECTO: "${p.title}" (${p.category})
+       DESCRIPCIÓN: ${description}
+       TECNOLOGÍAS: ${p.tags.join(', ')}
+       ENLACE: ${p.link}`;
+    }).join('\n\n');
     return `
-    === DATOS DEL PERFIL (JOSHUA CHÁVEZ) ===
+    === PERFIL DE JOSHUA CHÁVEZ (DATA SOURCE) ===
+    
+    [INFORMACIÓN PERSONAL]
     Nombre: ${content_1.sharedData.name}
+    Rol: Ingeniero de Sistemas & Full Stack Developer
     Email: ${content_1.sharedData.email}
-    GitHub: ${content_1.sharedData.github}
-    LinkedIn: ${content_1.sharedData.linkedin}
-    Experiencia Total: ${content_1.sharedData.stats.yearsExperience} años.
-    Proyectos Entregados: ${content_1.sharedData.stats.projectsShipped}.
+    Experiencia: +${content_1.sharedData.stats.yearsExperience} años.
+    Proyectos Entregados: +${content_1.sharedData.stats.projectsShipped}.
+    Links: GitHub (${content_1.sharedData.github}), LinkedIn (${content_1.sharedData.linkedin}).
     
-    === RESUMEN BIO ===
-    ${spanish.about.bio}
+    [BIO / PERFIL PROFESIONAL]
+    "${spanish.about.bio}"
     
-    === EXPERIENCIA LABORAL ===
-    ${spanish.experience.list.map(job => `- ROL: ${job.role} en ${job.company} (${job.period}).
-       DESC: ${job.description}
-       TECH: ${job.technologies.join(', ')}`).join('\n')}
+    [STACK TECNOLÓGICO Y HABILIDADES]
+    ${spanish.tech.categories.map(cat => `* ${cat.title}: ${cat.skills.join(', ')}`).join('\n')}
     
-    === PROYECTOS REALIZADOS (PORTAFOLIO) ===
-    ${content_1.sharedData.projects.map(p => `- PROYECTO: ${p.title} (${p.category})
-       TAGS: ${p.tags.join(', ')}
-       LINK: ${p.link}`).join('\n')}
+    [EXPERIENCIA LABORAL DETALLADA]
+    ${spanish.experience.list.map(job => `* ROL: ${job.role} en ${job.company} (${job.period}).
+        RESUMEN: ${job.description}
+        STACK USADO: ${job.technologies.join(', ')}`).join('\n\n')}
     
-    === STACK TECNOLÓGICO ===
-    ${spanish.tech.categories.map(cat => `- ${cat.title}: ${Array.isArray(cat.skills) ? cat.skills.map((s) => typeof s === 'string' ? s : s.name).join(', ') : ''}`).join('\n')}
+    [PORTAFOLIO DE PROYECTOS (DETALLE COMPLETO)]
+    ${projectContext}
   `;
 };
 exports.getPortfolioContext = getPortfolioContext;
