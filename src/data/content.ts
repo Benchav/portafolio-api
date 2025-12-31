@@ -4,7 +4,7 @@ export const sharedData = {
     phone: "+505 87156909",
     whatsapp: "https://api.whatsapp.com/send/?phone=50587156909&text&type=phone_number&app_absent=0",
     github: "https://github.com/Benchav",
-    linkedin: "https://www.linkedin.com/in/joshua-benjamin-ch%C3%A1vez-lau-44a65534b/",
+    linkedin: "https://www.linkedin.com/in/joshua-ch%C3%A1vez-lau-44a65534b/?trk=public-profile-join-page",
     stats: {
         yearsExperience: 3,
         projectsShipped: 19,
