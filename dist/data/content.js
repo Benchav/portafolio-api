@@ -1,4 +1,7 @@
-export const sharedData = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.content = exports.sharedData = void 0;
+exports.sharedData = {
     name: "Joshua Benjamín Chávez Lau",
     email: "joshua44benja@gmail.com",
     role: "Full Stack Developer",
@@ -8,17 +11,14 @@ export const sharedData = {
         github: "https://github.com/joshua-chavez"
     }
 };
-
-export const content = {
+exports.content = {
     about: `Soy un Desarrollador Full Stack apasionado con experiencia en la construcción de aplicaciones web robustas y escalables. Me especializo en el ecosistema JavaScript/TypeScript, pero tengo una sólida base en C# y Python. Me encanta resolver problemas complejos y aprender nuevas tecnologías constantemente.`,
-
     skills: {
         frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML5", "CSS3"],
         backend: ["Node.js", "Express", "C# (.NET)", "Python", "REST APIs", "GraphQL"],
         database: ["SQL Server", "PostgreSQL", "MongoDB", "MySQL"],
         tools: ["Git", "Docker", "Azure", "AWS", "VS Code"]
     },
-
     experience: [
         {
             role: "Freelance Full Stack Developer",
@@ -39,7 +39,6 @@ export const content = {
             description: "Participación activa en hackathones locales, desarrollando prototipos innovadores en tiempos limitados."
         }
     ],
-
     projects: [
         {
             name: "Constructora Web",
@@ -61,3 +60,4 @@ export const content = {
         }
     ]
 };
+//# sourceMappingURL=content.js.map

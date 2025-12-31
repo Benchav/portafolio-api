@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
 import { config } from './config/env';
-import { chatController } from './controllers/chatController';
+import { swaggerSpec } from './config/swagger';
+import chatRoutes from './routes/chatRoutes';
 
 const app = express();
 
@@ -19,15 +21,18 @@ app.use(express.json());
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minuto
     max: 20, // Limita a 20 peticiones por IP por minuto
-    message: 'Demasiadas peticiones desde esta IP, por favor intenta de nuevo en un minuto.',
+    message: { success: false, error: 'Demasiadas peticiones desde esta IP, por favor intenta de nuevo en un minuto.' },
     standardHeaders: true,
     legacyHeaders: false,
 });
 
 app.use('/api', limiter);
 
+// Swagger Documentation
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Routes
-app.post('/api/chat', chatController);
+app.use('/api', chatRoutes);
 
 // Health Check
 app.get('/health', (req, res) => {
@@ -37,5 +42,8 @@ app.get('/health', (req, res) => {
 // Start Server
 app.listen(config.port, () => {
     console.log(`Server running on port ${config.port}`);
+    console.log(`Documentation available at http://localhost:${config.port}/api/docs`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
+
+export default app;
