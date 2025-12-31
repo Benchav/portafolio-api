@@ -1,6 +1,8 @@
 export declare const sharedData: {
     name: string;
     email: string;
+    phone: string;
+    whatsapp: string;
     github: string;
     linkedin: string;
     stats: {

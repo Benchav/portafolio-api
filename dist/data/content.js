@@ -4,6 +4,8 @@ exports.content = exports.sharedData = void 0;
 exports.sharedData = {
     name: "Joshua Benjamín Chávez Lau",
     email: "joshua44benja@gmail.com",
+    phone: "+505 87156909",
+    whatsapp: "https://api.whatsapp.com/send/?phone=50587156909&text&type=phone_number&app_absent=0",
     github: "https://github.com/Benchav",
     linkedin: "https://www.linkedin.com/in/joshua-benjamin-ch%C3%A1vez-lau-44a65534b/",
     stats: {

@@ -20,6 +20,8 @@ export const getPortfolioContext = () => {
     Nombre: ${sharedData.name}
     Rol: Ingeniero de Sistemas & Full Stack Developer
     Email: ${sharedData.email}
+    Teléfono: ${sharedData.phone}
+    WhatsApp: ${sharedData.whatsapp}
     Experiencia: +${sharedData.stats.yearsExperience} años.
     Proyectos Entregados: +${sharedData.stats.projectsShipped}.
     Links: GitHub (${sharedData.github}), LinkedIn (${sharedData.linkedin}).
