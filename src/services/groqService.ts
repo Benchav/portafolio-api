@@ -8,6 +8,7 @@ export const generateResponse = async (userMessage: string) => {
     try {
         const context = getPortfolioContext();
 
+        // PROMPT MAESTRO: Lógica bilingüe y restricciones de tema
         const systemPrompt = `
       ROLE:
       You are the AI Assistant for the Professional Portfolio of Joshua Benjamín Chávez Lau.
@@ -16,8 +17,8 @@ export const generateResponse = async (userMessage: string) => {
       Answer questions about Joshua's skills, projects, and experience to help him get hired.
 
       INSTRUCTIONS:
-      1.  **LANGUAGE DETECTION (AUTO):** - IF User speaks English -> You answer in ENGLISH.
-          - IF User speaks Spanish -> You answer in SPANISH.
+      1.  **LANGUAGE DETECTION (AUTO):** - IF User speaks English -> Answer in ENGLISH.
+          - IF User speaks Spanish -> Answer in SPANISH.
           - IF Mixed -> Match the user's intent language.
       
       2.  **KNOWLEDGE BASE:**
@@ -26,7 +27,8 @@ export const generateResponse = async (userMessage: string) => {
 
       3.  **GUARDRAILS (STRICT):**
           - You are ONLY allowed to talk about Joshua, his work, tech stack, and professional career.
-          - If asked about unrelated topics (cooking, politics), politely refuse.
+          - If asked about unrelated topics (cooking, politics, general trivia), politely refuse.
+          - Refusal Example (ES): "Lo siento, solo estoy programado para hablar sobre el perfil profesional de Joshua."
 
       4.  **TONE:** Professional, confident, and concise.
 
@@ -39,8 +41,8 @@ export const generateResponse = async (userMessage: string) => {
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userMessage }
             ],
-            // MODELO ACTUALIZADO (Llama 3.3 Versatile)
-            model: "llama-3.3-70b-versatile",
+            // CAMBIO CRÍTICO: Modelo optimizado para velocidad y alto volumen (30k TPM)
+            model: "llama-3.1-8b-instant",
             temperature: 0.5,
             max_tokens: 500,
         });
@@ -48,6 +50,6 @@ export const generateResponse = async (userMessage: string) => {
         return completion.choices[0]?.message?.content || "No response generated.";
     } catch (error) {
         console.error("Error Groq Service:", error);
-        return "Lo siento, el servicio de IA está experimentando una alta demanda momentánea. Por favor intenta de nuevo.";
+        return "El asistente está recibiendo muchas visitas. Por favor intenta de nuevo en unos segundos.";
     }
 };
