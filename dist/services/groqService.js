@@ -53,7 +53,7 @@ ${context}
             role: h.role,
             content: h.content,
         }));
-        const completion = await groq.chat.completions.create({
+        const requestParams = {
             messages: [
                 { role: "system", content: systemPrompt },
                 ...recentHistory,
@@ -62,7 +62,11 @@ ${context}
             model: env_1.config.groqModel,
             temperature: 0.7,
             max_tokens: 300,
-        });
+        };
+        if (env_1.config.groqModel.includes("gpt-oss")) {
+            requestParams.reasoning_format = "hidden";
+        }
+        const completion = await groq.chat.completions.create(requestParams);
         const choice = completion.choices[0];
         const rawContent = choice?.message?.content || choice?.message?.reasoning_content || "";
         // Limpieza de seguridad: garantizamos que no haya asteriscos ni símbolos raros de markdown

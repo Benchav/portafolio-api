@@ -57,7 +57,7 @@ ${context}
                 content: h.content,
             }));
 
-        const completion = await groq.chat.completions.create({
+        const requestParams: any = {
             messages: [
                 { role: "system", content: systemPrompt },
                 ...recentHistory,
@@ -66,7 +66,13 @@ ${context}
             model: config.groqModel,
             temperature: 0.7,
             max_tokens: 300,
-        });
+        };
+
+        if (config.groqModel.includes("gpt-oss")) {
+            requestParams.reasoning_format = "hidden";
+        }
+
+        const completion = await groq.chat.completions.create(requestParams);
 
         const choice = completion.choices[0];
         const rawContent = choice?.message?.content || (choice?.message as any)?.reasoning_content || "";

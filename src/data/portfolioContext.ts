@@ -6,37 +6,34 @@ export const getPortfolioContext = (): string => {
     if (cachedContext) return cachedContext;
 
     const spanish = content.es;
-    const english = content.en;
 
     const projectList = sharedData.projects.map(p => {
         const desc = spanish.projectDescriptions[p.id] || "Proyecto destacado.";
         const demo = p.demoCredentials ? ` | Demo: ${p.demoCredentials}` : '';
-        return `[#${p.id} ${p.title} (${p.category})] Stack: ${p.tags.join(', ')} | Link: ${p.link}${demo} | ${desc}`;
+        return `${p.id}. ${p.title} (${p.category}) [${p.tags.join(', ')}]: ${p.link}${demo} - ${desc}`;
     }).join('\n');
 
     const expList = spanish.experience.list.map(job =>
-        `* ${job.role} en ${job.company} (${job.period}): ${job.description} [Stack: ${job.technologies.join(', ')}]`
+        `* ${job.role} en ${job.company} (${job.period}): ${job.description}`
     ).join('\n');
 
     const techList = spanish.tech.categories.map(c =>
         `${c.title}: ${c.skills.join(', ')}`
     ).join(' | ');
 
-    cachedContext = `PERFIL PROFESIONAL (JOSHUA CHÁVEZ):
-Nombre: ${sharedData.name} | Título: ${sharedData.title}
-Educación: ${sharedData.education} | Ubicación: ${sharedData.location}
-Email: ${sharedData.email} | Tel: ${sharedData.phone} | WhatsApp: ${sharedData.whatsapp}
-Portafolio Web: ${sharedData.portfolioUrl} | GitHub: ${sharedData.github} | LinkedIn: ${sharedData.linkedin}
-Experiencia: +${sharedData.stats.yearsExperience} años | Proyectos desplegados: +${sharedData.stats.projectsShipped} | Idiomas: ${sharedData.languages.join(', ')}
+    cachedContext = `PERFIL PROFESIONAL DE JOSHUA CHÁVEZ:
+Nombre: ${sharedData.name} (${sharedData.title})
+Ubicación: ${sharedData.location} | Universidad: ${sharedData.education}
+Contacto: Email ${sharedData.email} | WhatsApp ${sharedData.whatsapp} | Portafolio ${sharedData.portfolioUrl} | GitHub ${sharedData.github} | LinkedIn ${sharedData.linkedin}
+Stats: +${sharedData.stats.yearsExperience} años experiencia | +${sharedData.stats.projectsShipped} proyectos entregados | Idiomas: ${sharedData.languages.join(', ')}
 Certificaciones: ${sharedData.certifications.join('; ')}
 
-BIO (ES): ${spanish.about.bio}
-BIO (EN): ${english.about.bio}
+BIO: ${spanish.about.bio}
 
 HABILIDADES:
 ${techList}
 
-EXPERIENCIA DESTACADA:
+EXPERIENCIA:
 ${expList}
 
 CATÁLOGO DE PROYECTOS (20):
