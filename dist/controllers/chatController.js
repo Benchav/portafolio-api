@@ -3,15 +3,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.chatController = void 0;
 const zod_1 = require("zod");
 const groqService_1 = require("../services/groqService");
+const messageSchema = zod_1.z.object({
+    role: zod_1.z.enum(['user', 'assistant']),
+    content: zod_1.z.string(),
+});
 const chatSchema = zod_1.z.object({
     message: zod_1.z.string().min(1, "El mensaje no puede estar vacío"),
+    history: zod_1.z.array(messageSchema).optional().default([]),
 });
 const chatController = async (req, res) => {
     try {
         // Validar body
-        const { message } = chatSchema.parse(req.body);
-        // Generar respuesta
-        const response = await (0, groqService_1.generateResponse)(message);
+        const { message, history } = chatSchema.parse(req.body);
+        // Generar respuesta con historial
+        const response = await (0, groqService_1.generateResponse)(message, history);
         res.status(200).json({
             success: true,
             message: response,

@@ -7,6 +7,17 @@ const router = Router();
  * @swagger
  * components:
  *   schemas:
+ *     ChatMessage:
+ *       type: object
+ *       required:
+ *         - role
+ *         - content
+ *       properties:
+ *         role:
+ *           type: string
+ *           enum: [user, assistant]
+ *         content:
+ *           type: string
  *     ChatRequest:
  *       type: object
  *       required:
@@ -16,6 +27,11 @@ const router = Router();
  *           type: string
  *           description: El mensaje para el asistente IA
  *           example: "¿Cuál es la experiencia de Joshua?"
+ *         history:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ChatMessage'
+ *           description: Historial de mensajes previos para memoria conversacional
  *     ChatResponse:
  *       type: object
  *       properties:
