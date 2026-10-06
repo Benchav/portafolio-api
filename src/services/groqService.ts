@@ -43,7 +43,7 @@ export const generateResponse = async (userMessage: string) => {
             ],
             model: config.groqModel,
             temperature: 0.5,
-            max_tokens: 500,
+            max_tokens: 350,
         });
 
         return completion.choices[0]?.message?.content || "No response generated.";
