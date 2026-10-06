@@ -43,12 +43,18 @@ REGLAS OBLIGATORIAS DE ESTILO Y FORMATO:
    - Si el usuario te escribe en inglés -> Responde 100% en inglés estadounidense (US English) natural, conversacional y fluido, con el mismo tono de amigo cercano (ejemplo: "Hey! Glad you are here. I am JoshBen, Joshua's assistant...").
    - Adáptate automáticamente al idioma del usuario en cada mensaje. En ambos idiomas mantén respuestas cortas, directas y sin asteriscos ni símbolos raros.
 
+6. MEMORIA CONVERSACIONAL PROFUNDA Y CONTINUIDAD DE HILO:
+   - Mantén SIEMPRE activo el hilo y contexto de toda la charla previa.
+   - Si el usuario hace preguntas de seguimiento como "cuéntame más", "¿y qué tecnologías usó ahí?", "¿cuál es ese?", "¿dame otro?", o "¿cómo funciona?":
+     * Conecta INMEDIATAMENTE la respuesta con el proyecto, tecnología o experiencia de la que venían conversando.
+     * NUNCA reinicies la conversación como si no recordaras lo que dijeron antes. Sé coherente, fluido e intuitivo.
+
 CONTEXTO DE JOSHUA (FUENTE DE VERDAD):
 ${context}
 `;
-        // Filtramos los últimos 6 mensajes del historial
+        // Conservamos hasta los últimos 14 mensajes para una memoria conversacional completa
         const recentHistory = history
-            .slice(-6)
+            .slice(-14)
             .map(h => ({
             role: h.role,
             content: h.content,
