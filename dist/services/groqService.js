@@ -61,16 +61,20 @@ ${context}
             ],
             model: env_1.config.groqModel,
             temperature: 0.7,
-            max_tokens: 220,
+            max_tokens: 300,
         });
-        const rawContent = completion.choices[0]?.message?.content || "No response generated.";
+        const choice = completion.choices[0];
+        const rawContent = choice?.message?.content || choice?.message?.reasoning_content || "";
         // Limpieza de seguridad: garantizamos que no haya asteriscos ni símbolos raros de markdown
-        const cleanContent = rawContent
+        let cleanContent = rawContent
             .replace(/\*\*/g, '')
             .replace(/\*/g, '')
             .replace(/#{1,6}\s+/g, '')
             .replace(/^[-•]\s+/gm, '')
             .trim();
+        if (!cleanContent) {
+            cleanContent = "Uno de los proyectos más destacados de Joshua es Constructora Web, un sistema completo para constructoras con demo en vivo disponible en https://rikiconstructora.vercel.app/ (usuario: ceo, clave: 123), junto con su desarrollo de ERP multisucursal en producción. Puedes preguntarme los detalles de cualquiera de ellos.";
+        }
         return cleanContent;
     }
     catch (error) {
