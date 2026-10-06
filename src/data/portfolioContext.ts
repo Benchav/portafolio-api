@@ -1,63 +1,46 @@
 import { sharedData, content } from './content';
 
-export const getPortfolioContext = () => {
+let cachedContext: string | null = null;
+
+export const getPortfolioContext = (): string => {
+    if (cachedContext) return cachedContext;
+
     const spanish = content.es;
     const english = content.en;
 
-    // Mapeamos los 20 proyectos uniendo info técnica, descripción y credenciales demo
-    const projectContext = sharedData.projects.map(p => {
-        const descriptionEs = spanish.projectDescriptions[p.id] || "Proyecto destacado de desarrollo de software.";
-        const descriptionEn = english.projectDescriptions[p.id] || "Featured software development project.";
-        const demoInfo = p.demoCredentials ? `\n       CREDENCIALES DEMO: ${p.demoCredentials}` : '';
+    const projectList = sharedData.projects.map(p => {
+        const desc = spanish.projectDescriptions[p.id] || "Proyecto destacado.";
+        const demo = p.demoCredentials ? ` | Demo: ${p.demoCredentials}` : '';
+        return `[#${p.id} ${p.title} (${p.category})] Stack: ${p.tags.join(', ')} | Link: ${p.link}${demo} | ${desc}`;
+    }).join('\n');
 
-        return `- PROYECTO #${p.id}: "${p.title}" (${p.category})
-       DESCRIPCIÓN (ES): ${descriptionEs}
-       DESCRIPTION (EN): ${descriptionEn}
-       TECNOLOGÍAS / STACK: ${p.tags.join(', ')}
-       ENLACE: ${p.link}${demoInfo}`;
-    }).join('\n\n');
+    const expList = spanish.experience.list.map(job =>
+        `* ${job.role} en ${job.company} (${job.period}): ${job.description} [Stack: ${job.technologies.join(', ')}]`
+    ).join('\n');
 
-    return `
-    === PERFIL PROFESIONAL DE JOSHUA CHÁVEZ (DATA SOURCE / SOURCE OF TRUTH) ===
-    
-    [INFORMACIÓN PERSONAL Y CONTACTO]
-    Nombre: ${sharedData.name}
-    Título Profesional: ${sharedData.title}
-    Educación: ${sharedData.education}
-    Ubicación / Residencia: ${sharedData.location}
-    Email: ${sharedData.email}
-    Teléfono: ${sharedData.phone}
-    WhatsApp: ${sharedData.whatsapp}
-    Portafolio Web Oficial: ${sharedData.portfolioUrl}
-    GitHub: ${sharedData.github}
-    LinkedIn: ${sharedData.linkedin}
-    Años de Experiencia: +${sharedData.stats.yearsExperience} años
-    Proyectos Entregados / Desplegados: +${sharedData.stats.projectsShipped} proyectos
-    Idiomas: ${sharedData.languages.join(', ')}
+    const techList = spanish.tech.categories.map(c =>
+        `${c.title}: ${c.skills.join(', ')}`
+    ).join(' | ');
 
-    [CERTIFICACIONES Y LOGROS]
-    ${sharedData.certifications.map(cert => `* ${cert}`).join('\n')}
-    
-    [BIO / PERFIL PROFESIONAL (ES)]
-    "${spanish.about.bio}"
+    cachedContext = `PERFIL PROFESIONAL (JOSHUA CHÁVEZ):
+Nombre: ${sharedData.name} | Título: ${sharedData.title}
+Educación: ${sharedData.education} | Ubicación: ${sharedData.location}
+Email: ${sharedData.email} | Tel: ${sharedData.phone} | WhatsApp: ${sharedData.whatsapp}
+Portafolio Web: ${sharedData.portfolioUrl} | GitHub: ${sharedData.github} | LinkedIn: ${sharedData.linkedin}
+Experiencia: +${sharedData.stats.yearsExperience} años | Proyectos desplegados: +${sharedData.stats.projectsShipped} | Idiomas: ${sharedData.languages.join(', ')}
+Certificaciones: ${sharedData.certifications.join('; ')}
 
-    [BIO / PROFESSIONAL SUMMARY (EN)]
-    "${english.about.bio}"
-    
-    [STACK TECNOLÓGICO Y HABILIDADES COMPLETAS]
-    ${spanish.tech.categories.map(cat =>
-        `* ${cat.title}: ${cat.skills.join(', ')}`
-    ).join('\n')}
-    
-    [EXPERIENCIA LABORAL Y TRAYECTORIA DESTACADA (2023 - 2026)]
-    ${spanish.experience.list.map(job =>
-        `* ROL: ${job.role}
-        EMPRESA / PROYECTO: ${job.company} (${job.period})
-        DETALLE: ${job.description}
-        STACK TECNOLÓGICO: ${job.technologies.join(', ')}`
-    ).join('\n\n')}
-    
-    [CATÁLOGO COMPLETO DE PROYECTOS (20 PROYECTOS)]
-    ${projectContext}
-  `;
+BIO (ES): ${spanish.about.bio}
+BIO (EN): ${english.about.bio}
+
+HABILIDADES:
+${techList}
+
+EXPERIENCIA DESTACADA:
+${expList}
+
+CATÁLOGO DE PROYECTOS (20):
+${projectList}`;
+
+    return cachedContext;
 };
