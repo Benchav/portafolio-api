@@ -6,6 +6,7 @@ dotenv.config();
 const envSchema = z.object({
   PORT: z.string().default('3000'),
   GROQ_API_KEY: z.string().min(1, "GROQ_API_KEY is required"),
+  GROQ_MODEL: z.string().default('llama-3.3-70b-versatile'),
   ALLOWED_ORIGIN: z.string().default('*')
 });
 
@@ -14,5 +15,6 @@ const envVars = envSchema.parse(process.env);
 export const config = {
   port: parseInt(envVars.PORT, 10),
   groqApiKey: envVars.GROQ_API_KEY,
+  groqModel: envVars.GROQ_MODEL,
   allowedOrigin: envVars.ALLOWED_ORIGIN
 };

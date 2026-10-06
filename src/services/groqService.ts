@@ -41,8 +41,7 @@ export const generateResponse = async (userMessage: string) => {
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userMessage }
             ],
-            // CAMBIO CRÍTICO: Modelo optimizado para velocidad y alto volumen (30k TPM)
-            model: "llama-3.1-8b-instant",
+            model: config.groqModel,
             temperature: 0.5,
             max_tokens: 500,
         });
