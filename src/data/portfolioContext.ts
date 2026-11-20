@@ -14,7 +14,7 @@ export const getPortfolioContext = (): string => {
     }).join('\n');
 
     const expList = spanish.experience.list.map(job =>
-        `* ${job.role} en ${job.company} (${job.period}): ${job.description}`
+        `* ${job.role} en ${job.company} (${job.period}) [${job.technologies.join(', ')}]: ${job.description}`
     ).join('\n');
 
     const techList = spanish.tech.categories.map(c =>
@@ -28,15 +28,20 @@ Contacto: Email ${sharedData.email} | WhatsApp ${sharedData.whatsapp} | Portafol
 Stats: +${sharedData.stats.yearsExperience} años experiencia | +${sharedData.stats.projectsShipped} proyectos entregados | Idiomas: ${sharedData.languages.join(', ')}
 Certificaciones: ${sharedData.certifications.join('; ')}
 
-BIO: ${spanish.about.bio}
+BIO:
+${spanish.about.bio}
 
-HABILIDADES:
+ALCANCE PROFESIONAL Y ESPECIALIDAD:
+Joshua es Ingeniero de Sistemas y desarrollador Full Stack especialista en desarrollo y arquitectura de software (React, Node.js, TypeScript, ERPs/PWAs multisucursal, APIs y soluciones integradas con Inteligencia Artificial como Gemini y Llama).
+IMPORTANTE: Joshua NO se dedica a soporte técnico de hardware, reparación de PCs/laptops ni servicio técnico de computadoras. Su trabajo es 100% desarrollo y arquitectura de soluciones de software.
+
+HABILIDADES TÉCNICAS:
 ${techList}
 
-EXPERIENCIA:
+EXPERIENCIA LABORAL:
 ${expList}
 
-CATÁLOGO DE PROYECTOS (20):
+CATÁLOGO DE PROYECTOS DESTACADOS:
 ${projectList}`;
 
     return cachedContext;

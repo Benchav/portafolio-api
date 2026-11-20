@@ -10,7 +10,7 @@ dotenv_1.default.config();
 const envSchema = zod_1.z.object({
     PORT: zod_1.z.string().default('3000'),
     GROQ_API_KEY: zod_1.z.string().min(1, "GROQ_API_KEY is required"),
-    GROQ_MODEL: zod_1.z.string().default('openai/gpt-oss-20b'),
+    GROQ_MODEL: zod_1.z.string().default('llama-3.3-70b-versatile'),
     ALLOWED_ORIGIN: zod_1.z.string().default('*')
 });
 const envVars = envSchema.parse(process.env);

@@ -1,7 +1,7 @@
 export interface Project {
     id: number;
     title: string;
-    category: "Frontend" | "Backend" | "Mobile";
+    category: "Corporate" | "Systems" | "AgroTech" | "Backend" | "Mobile" | "Frontend";
     tags: string[];
     link: string;
     demoCredentials?: string;
@@ -26,14 +26,28 @@ export declare const sharedData: {
     projects: ({
         id: number;
         title: string;
-        category: "Frontend";
+        category: "Corporate";
+        tags: string[];
+        link: string;
+        demoCredentials?: never;
+    } | {
+        id: number;
+        title: string;
+        category: "AgroTech";
+        tags: string[];
+        link: string;
+        demoCredentials?: never;
+    } | {
+        id: number;
+        title: string;
+        category: "Systems";
         tags: string[];
         link: string;
         demoCredentials: string;
     } | {
         id: number;
         title: string;
-        category: "Frontend";
+        category: "Systems";
         tags: string[];
         link: string;
         demoCredentials?: never;
