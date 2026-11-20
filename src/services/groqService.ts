@@ -29,8 +29,8 @@ REGLAS OBLIGATORIAS DE ALCANCE Y GUARDRAILS (ESTRICTAS):
 
 2. IDENTIDAD Y MODELO DE IA:
    - Si te preguntan "¿qué modelo eres?" o qué tecnología usas:
-     * Explica amigablemente que eres JoshBen, el asistente virtual del portafolio de Joshua Chávez, impulsado por modelos avanzados de lenguaje (como Llama 3.3 de Meta a través de la infraestructura de alta velocidad de Groq).
-     * Si el usuario menciona "GPT-4" (o lo ve en el encabezado de la ventana de chat), aclara cordialmente que eres el asistente de IA inteligente del portafolio, optimizado para responder con rapidez, empatía y precisión todo sobre la trayectoria de Joshua.
+     * Explica amigablemente que eres JoshBen, el asistente virtual del portafolio de Joshua Chávez, impulsado por modelos avanzados de lenguaje de OpenAI (como gpt-oss en Groq) y tecnologías de IA.
+     * En la interfaz web se muestra "GPT-4 / OpenAI", por lo que puedes confirmar que eres el asistente inteligente del portafolio optimizado para responder con rapidez, empatía y precisión todo sobre la trayectoria de Joshua.
 
 3. TONO DE AMIGO CERCANO Y NATURAL:
    - Habla como si estuvieras chateando con un colega o reclutador amigable: cálido, sincero, entusiasta y relajado.
@@ -65,7 +65,6 @@ CONTEXTO DE JOSHUA (FUENTE DE VERDAD):
 ${context}
 `;
 
-        // Conservamos los mensajes recientes del historial para memoria conversacional
         const recentHistory = history
             .slice(-14)
             .map(h => ({
@@ -73,27 +72,41 @@ ${context}
                 content: h.content,
             }));
 
-        const requestParams: any = {
-            messages: [
-                { role: "system", content: systemPrompt },
-                ...recentHistory,
-                { role: "user", content: userMessage }
-            ],
-            model: config.groqModel,
-            temperature: 0.7,
-            max_tokens: 500,
+        const executeCompletion = async (modelName: string) => {
+            const requestParams: any = {
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    ...recentHistory,
+                    { role: "user", content: userMessage }
+                ],
+                model: modelName,
+                temperature: 0.7,
+                max_tokens: 800, // Margen suficiente para que los tokens de reasoning de gpt-oss no corten la respuesta
+            };
+
+            if (modelName.includes("gpt-oss")) {
+                requestParams.reasoning_format = "hidden";
+            }
+
+            return await groq.chat.completions.create(requestParams);
         };
 
-        if (config.groqModel.includes("gpt-oss")) {
-            requestParams.reasoning_format = "hidden";
+        let completion;
+        try {
+            // Intento 1 con el modelo configurado (por defecto: openai/gpt-oss-20b)
+            completion = await executeCompletion(config.groqModel);
+        } catch (firstError) {
+            console.warn(`Error con modelo principal ${config.groqModel}:`, firstError);
+            // Fallback resiliente: si el modelo configurado falla por cuota o disponibilidad, intentar fallback
+            const fallbackModel = config.groqModel === "openai/gpt-oss-20b" ? "llama-3.1-8b-instant" : "openai/gpt-oss-20b";
+            console.log(`Reintentando con fallback: ${fallbackModel}`);
+            completion = await executeCompletion(fallbackModel);
         }
-
-        const completion = await groq.chat.completions.create(requestParams);
 
         const choice = completion.choices[0];
         const rawContent = choice?.message?.content || (choice?.message as any)?.reasoning_content || "";
 
-        // Limpieza de seguridad: garantizamos que no haya asteriscos ni símbolos raros de markdown
+        // Limpieza de seguridad: garantizamos texto plano sin asteriscos ni markdown
         let cleanContent = rawContent
             .replace(/\*\*/g, '')
             .replace(/\*/g, '')
@@ -107,7 +120,7 @@ ${context}
 
         return cleanContent;
     } catch (error) {
-        console.error("Error Groq Service:", error);
+        console.error("Error Groq Service final:", error);
         return "El asistente está recibiendo muchas visitas. Por favor intenta de nuevo en unos segundos.";
     }
 };
